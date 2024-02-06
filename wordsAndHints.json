@@ -1,22 +1,68 @@
 {
     "categories": {
-        "places": {
-            "word": [
-                {
-                    "phrase": "Kathmandu",
-                    "hint": "Capital"
-                },
-                {
-
-                    "phrase": "Europe",
-                    "hint": "Continent"
-                }
-
-            ]
-        },
-        "Series": {
-            "phrase": "Twilight",
-            "hint": "Vampire"
-        }
+        "places": [
+            {
+                "phrase": "Kathmandu",
+                "hint": "capital"
+            },
+            {
+                "phrase": "Antartica",
+                "hint": "Continent"
+            },
+            {
+                "phrase": "Rio de Janeiro",
+                "hint": "The name means 'River of January'"
+            },
+            {
+                "phrase": "Mount Everest",
+                "hint": "Famous mountain"
+            },
+            {
+                "phrase": "Chitwan National Park",
+                "hint": "Place where you go for Safari"
+            },
+            {
+                "phrase": "The great pyramid of giza",
+                "hint": "Famous pyramid in Egypt"
+            }
+        ],
+        "movies": [
+            {
+                "phrase": "Train to Busan",
+                "hint": "Zombie"
+            },
+            {
+                "phrase": "Little Krishna",
+                "hint": "A flute playing God"
+            }
+        ],
+        "cartoons": [
+            {
+                "phrase": "Courage the Cowardly Dog",
+                "hint": "Pink dog in horror house"
+            },
+            {
+                "phrase": "The Powerpuff Girls",
+                "hint": "Three colorful little girls who can fly"
+            },
+            {
+                "phrase": "Johnny Bravo",
+                "hint": "A teen boy with large upper body, sunglasses, and tall"
+            },
+            {
+                "phrase": "Dora the Explorer",
+                "hint": "A blind short girl"
+            }
+        ],
+        "series": [
+            {
+                "phrase": "Twilight",
+                "hint": "Vampire"
+            },
+            {
+                "phrase": "Harry Potter",
+                "hint": "Leviosa"
+            }
+        ]
     }
 }
