@@ -1,12 +1,22 @@
-[
-    {
-        "category": "Place",
-        "phrase": "Kathmandu",
-        "hint": "Capital city"
-    },
-    {
-        "category": "Series",
-        "phrase": "Twilight",
-        "hint": "Vampire"
+{
+    "categories": {
+        "places": {
+            "word": [
+                {
+                    "phrase": "Kathmandu",
+                    "hint": "Capital"
+                },
+                {
+
+                    "phrase": "Europe",
+                    "hint": "Continent"
+                }
+
+            ]
+        },
+        "Series": {
+            "phrase": "Twilight",
+            "hint": "Vampire"
+        }
     }
-]
+}
