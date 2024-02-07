@@ -9,7 +9,7 @@ using namespace Json;
 
 void readFromFile(string Cat)
 {
-    Value word;
+    Value word, selectedWord, hintRead;
 
     // Opens the json file where words for games are stored
 
@@ -21,22 +21,55 @@ void readFromFile(string Cat)
     srand(time(0));
     int size = word["categories"][Cat].size();
     int randomIndex = rand() % (size);
-    Value wordToGuess = word["categories"][Cat][randomIndex]["phrase"];
-    Value hint = word["categories"][Cat][randomIndex]["hint"];
-    cout << "Word to guess ===>" << wordToGuess << endl;
-    cout << "Hint===>" << hint;
+
+    // Read the phrase from file
+
+    selectedWord = word["categories"][Cat][randomIndex]["phrase"].asString();
+
+    // Read the hint for the phrase from file
+
+    hintRead = word["categories"][Cat][randomIndex]["hint"].asString();
+
+    // convert the json object to string
+
+    string wordToGuess = selectedWord.asString();
+    string hint = hintRead.asString();
+    cout << "Hint===>" << hint << endl;
+    cout << wordToGuess << endl
+         << endl
+         << endl;
+
+    // Make the phrase hidden for user to guess
+
+    char hiddenWord[wordToGuess.length()];
+
+    for (int i = 0; i < wordToGuess.length(); i++)
+    {
+        if (wordToGuess[i] == ' ')
+            hiddenWord[i] = ' ';
+
+        else
+            hiddenWord[i] = '.';
+    }
+    cout << hiddenWord << endl;
 
     word_file.close();
 }
 
-void play(string);
+void play(string hiddenWord, string wordToGuess, string hiint)
+{
+    int chances = 6, flag = 0;
+
+    cout << "-----------------------" << endl;
+    cout << "THE GAME BEGINS NOW!" << endl;
+}
 
 void CategorySelection()
 {
     int Category;
     cout << "Which Category do you want to play?" << endl;
     cout << "1: Places  2: Movies 3:cartoons 4:series" << endl;
-    cout << "Enter here: .....";
+    cout << "Enter here: ===>";
     cin >> Category;
     switch (Category)
     {
