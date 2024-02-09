@@ -54,7 +54,7 @@ void readFromFile(string Cat)
             hiddenWord[i] = ' ';
 
         else
-            hiddenWord[i] = '.';
+            hiddenWord[i] = '*';
     }
     cout << hiddenWord << endl;
     string temp = string(hiddenWord);
@@ -134,7 +134,7 @@ void play(string hiddenWord, string wordToGuess, string hint)
     } while (chances != 0);
     return;
 }
- 
+
 // To replace the hidden letters with guessed letters if the guess is correct
 
 string replaceGuessedLetters(string wordToGuess, string hiddenWord, char guess)
