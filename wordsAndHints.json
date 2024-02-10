@@ -2,65 +2,65 @@
     "categories": {
         "places": [
             {
-                "phrase": "Kathmandu",
+                "phrase": "KATHMANDU",
                 "hint": "capital"
             },
             {
-                "phrase": "Antartica",
-                "hint": "Continent"
+                "phrase": "ANTARTICA",
+                "hint": "Cold Continent"
             },
             {
-                "phrase": "Rio de Janeiro",
+                "phrase": "RIO DE JANEIRO",
                 "hint": "The name means 'River of January'"
             },
             {
-                "phrase": "Mount Everest",
+                "phrase": "MOUNT EVEREST",
                 "hint": "Famous mountain"
             },
             {
-                "phrase": "Chitwan National Park",
+                "phrase": "CHITWAN NATIONAL PARK",
                 "hint": "Place where you go for Safari"
             },
             {
-                "phrase": "The great pyramid of giza",
+                "phrase": "THE GREAT PYRAMID OF GIZA",
                 "hint": "Famous pyramid in Egypt"
             }
         ],
         "movies": [
             {
-                "phrase": "Train to Busan",
+                "phrase": "TRAIN TO BUSAN",
                 "hint": "Zombie"
             },
             {
-                "phrase": "Little Krishna",
+                "phrase": "LITTLE KRISHNA",
                 "hint": "A flute playing God"
             }
         ],
         "cartoons": [
             {
-                "phrase": "Courage the Cowardly Dog",
+                "phrase": "COURAGE THE COWARDLY DOG",
                 "hint": "Pink dog in horror house"
             },
             {
-                "phrase": "The Powerpuff Girls",
+                "phrase": "THE POWER PUFF GIRLS",
                 "hint": "Three colorful little girls who can fly"
             },
             {
-                "phrase": "Johnny Bravo",
+                "phrase": "JOHNNY BRAVO",
                 "hint": "A teen boy with large upper body, sunglasses, and tall"
             },
             {
-                "phrase": "Dora the Explorer",
+                "phrase": "DORA THE EXPLORER",
                 "hint": "A blind short girl"
             }
         ],
         "series": [
             {
-                "phrase": "Twilight",
+                "phrase": "TWILIGHT",
                 "hint": "Vampire"
             },
             {
-                "phrase": "Harry Potter",
+                "phrase": "HARRY POTTER",
                 "hint": "Leviosa"
             }
         ]
