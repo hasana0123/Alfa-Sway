@@ -3,6 +3,7 @@
 #include <typeinfo>
 #include <fstream>
 #include <cstdlib>
+#include <iomanip>
 #include <ctime>
 using namespace std;
 using namespace Json;
@@ -10,6 +11,7 @@ using namespace Json;
 void play(string, string, string);
 bool compareWithGuessed(char, string);
 int compareWithOriginal(string, char);
+char makeUppercase(char);
 string replaceGuessedLetters(string, string, char);
 
 void readFromFile(string Cat)
@@ -83,7 +85,7 @@ void play(string hiddenWord, string wordToGuess, string hint)
         cout << "|     Hint: " << hint << "                                 |" << endl;
         cout << "|---------------------------------------------------------|" << endl;
 
-        cout << "      " << hiddenWord << "                                 |" << endl;
+        cout << "     To guess: " << hiddenWord << "                                 |" << endl;
         cout << "|---------------------------------------------------------|" << endl
              << endl;
 
@@ -91,12 +93,16 @@ void play(string hiddenWord, string wordToGuess, string hint)
 
         cout << "Enter the alphabet===>";
         cin >> guess;
+        cout << "---------------------------------------------" << endl;
+
+        // Convert user guessed letters to uppercase
+        guess = makeUppercase(guess);
 
         // Compare the guessed word with already guessed words
 
         if (compareWithGuessed(guess, guessedWords))
         {
-            cout << "Letter has already been chosen. \n Choose another letter!" << endl;
+            cout << "         Letter has already been chosen. \n       Choose another letter!" << endl;
             continue;
         }
         // If it's a new guess, compare the guessed word with the word needed to be guessed
@@ -108,6 +114,7 @@ void play(string hiddenWord, string wordToGuess, string hint)
                 // Case for incorrect guess
             case 0:
                 chances--;
+                cout << "          Oops! Wrong Guess!" << endl;
                 if (chances == 0 && (hiddenWord != wordToGuess))
                 {
                     cout << "The phrase was " << wordToGuess << endl;
@@ -116,6 +123,7 @@ void play(string hiddenWord, string wordToGuess, string hint)
                 break;
                 // Case for correct guess
             case 1:
+                cout << "         NICE!!!!" << endl;
                 hiddenWord = replaceGuessedLetters(wordToGuess, hiddenWord, guess);
                 if (hiddenWord == wordToGuess)
                 {
@@ -135,6 +143,14 @@ void play(string hiddenWord, string wordToGuess, string hint)
     return;
 }
 
+char makeUppercase(char guess)
+{
+    if (guess <= 122 && guess >= 97)
+        guess = guess - 32;
+
+    return guess;
+}
+
 // To replace the hidden letters with guessed letters if the guess is correct
 
 string replaceGuessedLetters(string wordToGuess, string hiddenWord, char guess)
@@ -144,7 +160,7 @@ string replaceGuessedLetters(string wordToGuess, string hiddenWord, char guess)
         if (wordToGuess[i] == ' ')
             continue;
 
-        if (wordToGuess[i] == guess || guess == wordToGuess[i] - 32 || guess == wordToGuess[i] + 32)
+        if (wordToGuess[i] == guess)
 
             hiddenWord[i] = guess;
     }
@@ -155,7 +171,7 @@ bool compareWithGuessed(char guess, string guessedWords)
 {
     for (int i = 0; i < guessedWords.length(); i++)
     {
-        if (guess == guessedWords[i] || guess == guessedWords[i] - 32 || guess == guessedWords[i] + 32)
+        if (guess == guessedWords[i])
             return true;
     }
     return false;
@@ -166,7 +182,7 @@ int compareWithOriginal(string wordToGuess, char guess)
     int flag = 0;
     for (int i = 0; i < wordToGuess.length(); i++)
     {
-        if (guess == wordToGuess[i] || guess == wordToGuess[i] - 32 || guess == wordToGuess[i] + 32)
+        if (guess == wordToGuess[i])
             flag = 1;
     }
     return flag;
@@ -175,9 +191,9 @@ int compareWithOriginal(string wordToGuess, char guess)
 void CategorySelection()
 {
     int Category;
-    cout << "Which Category do you want to play?" << endl;
-    cout << "1: Places  2: Movies 3:cartoons 4:series" << endl;
-    cout << "Enter here: ===>";
+    cout << "\n         Which Category do you want to play?" << endl;
+    cout << "         1: Places  2: Movies 3:cartoons 4:series\n" << endl;
+    cout << "         Enter here: ===>";
     cin >> Category;
     switch (Category)
     {
