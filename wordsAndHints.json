@@ -64,5 +64,25 @@
                 "hint": "Leviosa"
             }
         ]
+    },
+    "expressions":{
+        "correct":[
+            "Good Job!",
+            "Thank you!",
+            "That makes me like you a little!",
+            "Thank god,finally!",
+            "Yeah, That's what I'm talking about Now!",
+            "Keep Going!!!"
+        ],
+        "incorrect":[
+            "Oh,Common!",
+            "DO YOU NOT  HAVE A BRAIN!",
+            "SAVE ME, PLEASE! I beg you",
+            "Really...?",
+            "Who birthed you?",
+            "HEY!ARE YOU DUMB ON PURPOSE?",
+            "Why can't you do anything right?",
+            "..."
+        ]
     }
 }
