@@ -13,6 +13,7 @@ bool compareWithGuessed(char, string);
 int compareWithOriginal(string, char);
 char makeUppercase(char);
 string replaceGuessedLetters(string, string, char);
+void showGuessed(string guessedLetters);
 
 void readFromFile(string Cat)
 {
@@ -40,6 +41,7 @@ void readFromFile(string Cat)
     // convert the json object to string
 
     string wordToGuess = selectedWord.asString();
+
     string hint = hintRead.asString();
     cout << "Hint===>" << hint << endl;
     cout << wordToGuess << endl
@@ -48,22 +50,40 @@ void readFromFile(string Cat)
 
     // Make the phrase hidden for user to guess
 
-    char hiddenWord[wordToGuess.length()];
+    string hiddenWord;
 
     for (int i = 0; i < wordToGuess.length(); i++)
     {
         if (wordToGuess[i] == ' ')
-            hiddenWord[i] = ' ';
+            hiddenWord.push_back(' ');
 
         else
-            hiddenWord[i] = '*';
+            hiddenWord.push_back('^');
     }
-    cout << hiddenWord << endl;
-    string temp = string(hiddenWord);
 
     // Start Game
 
     play(hiddenWord, wordToGuess, hint);
+
+    word_file.close();
+    return;
+}
+
+//Read the expressions from file randomly and print in console
+
+void readExpressions(string expression)
+{
+    Value word;
+
+    ifstream word_file("wordsAndHints.json", std::ifstream::binary);
+    word_file >> word;
+
+    srand(time(0));
+
+    int size = word["expressions"][expression].size();
+    int randomIndex = rand() % (size);
+
+    cout << word["expressions"][expression][randomIndex].asString() << endl;
 
     word_file.close();
 }
@@ -72,20 +92,23 @@ void play(string hiddenWord, string wordToGuess, string hint)
 {
     int chances = 6, flag;
     char guess;
-    string guessedWords;
+    string guessedLetters;
 
     cout << "-----------------------" << endl;
-    cout << "THE GAME BEGINS NOW!" << endl
+    cout << "          LET'S GO!" << endl
          << endl;
     do
     {
         cout << "|---------------------------------------------------------|" << endl;
         cout << "|     Chances = " << chances << endl;
         cout << "|---------------------------------------------------------|" << endl;
-        cout << "|     Hint: " << hint << "                                 |" << endl;
+        cout << "|     Hint: " << hint << "                                 " << endl;
         cout << "|---------------------------------------------------------|" << endl;
-
-        cout << "     To guess: " << hiddenWord << "                                 |" << endl;
+        cout << "      To guess: " << hiddenWord << "                                 " << endl;
+        cout << "|---------------------------------------------------------|" << endl;
+        cout << "      Guessed Letters are===> "<<endl;
+        showGuessed(guessedLetters);
+        cout << endl;
         cout << "|---------------------------------------------------------|" << endl
              << endl;
 
@@ -98,14 +121,14 @@ void play(string hiddenWord, string wordToGuess, string hint)
         // Convert user guessed letters to uppercase
         guess = makeUppercase(guess);
 
-        // Compare the guessed word with already guessed words
+        // Compare the guessed letter with already guessed letters
 
-        if (compareWithGuessed(guess, guessedWords))
+        if (compareWithGuessed(guess, guessedLetters))
         {
-            cout << "         Letter has already been chosen. \n       Choose another letter!" << endl;
+            cout << "          Letter has already been chosen. \n       Choose another letter!" << endl;
             continue;
         }
-        // If it's a new guess, compare the guessed word with the word needed to be guessed
+        // For new guess, compare the guessed word with the word needed to be guessed
         else
         {
             flag = compareWithOriginal(wordToGuess, guess);
@@ -113,23 +136,25 @@ void play(string hiddenWord, string wordToGuess, string hint)
             {
                 // Case for incorrect guess
             case 0:
+                readExpressions("incorrect");
                 chances--;
-                cout << "          Oops! Wrong Guess!" << endl;
+
                 if (chances == 0 && (hiddenWord != wordToGuess))
                 {
                     cout << "The phrase was " << wordToGuess << endl;
-                    cout << "You Lost!" << endl;
+                    cout << "I WILL NEVER FORGET YOU!" << endl;
                 }
                 break;
                 // Case for correct guess
             case 1:
-                cout << "         NICE!!!!" << endl;
+                readExpressions("correct");
+
                 hiddenWord = replaceGuessedLetters(wordToGuess, hiddenWord, guess);
                 if (hiddenWord == wordToGuess)
                 {
                     cout << "The phrase was " << wordToGuess << endl;
-                    cout << "Yay! you won!" << endl;
-                    exit(0);
+                    cout << "MY PRECIOUS! THANK YOU!" << endl;
+                    return;
                 }
                 break;
             }
@@ -137,7 +162,7 @@ void play(string hiddenWord, string wordToGuess, string hint)
 
         // Add the guessed letters to stack
 
-        guessedWords.push_back(guess);
+        guessedLetters.push_back(guess);
 
     } while (chances != 0);
     return;
@@ -149,6 +174,16 @@ char makeUppercase(char guess)
         guess = guess - 32;
 
     return guess;
+}
+
+//Show users the already guessed letters in console so they don't repeat it
+
+void showGuessed(string guessedLetters)
+{
+    for (int i = 0; i < guessedLetters.length(); i++)
+    {
+        cout << guessedLetters[i] << ", ";
+    }
 }
 
 // To replace the hidden letters with guessed letters if the guess is correct
@@ -167,11 +202,11 @@ string replaceGuessedLetters(string wordToGuess, string hiddenWord, char guess)
     return hiddenWord;
 }
 
-bool compareWithGuessed(char guess, string guessedWords)
+bool compareWithGuessed(char guess, string guessedLetters)
 {
-    for (int i = 0; i < guessedWords.length(); i++)
+    for (int i = 0; i < guessedLetters.length(); i++)
     {
-        if (guess == guessedWords[i])
+        if (guess == guessedLetters[i])
             return true;
     }
     return false;
@@ -192,7 +227,8 @@ void CategorySelection()
 {
     int Category;
     cout << "\n         Which Category do you want to play?" << endl;
-    cout << "         1: Places  2: Movies 3:cartoons 4:series\n" << endl;
+    cout << "         1: Places  2: Movies 3:cartoons 4:series\n"
+         << endl;
     cout << "         Enter here: ===>";
     cin >> Category;
     switch (Category)
@@ -212,10 +248,21 @@ void CategorySelection()
     default:
         break;
     }
+    return;
 }
 
 int main()
 {
-    CategorySelection();
+    char playAgain;
+    do
+    {
+        CategorySelection();
+
+        cout << "Play Again? y/n ====>";
+        cin >> playAgain;
+        if (playAgain >= 65 && playAgain <= 90)
+            playAgain += 32;
+    } while (playAgain != 'n');
+
     return 0;
 }
