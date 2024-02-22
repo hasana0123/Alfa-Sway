@@ -15,7 +15,6 @@ int main()
     RectangleShape button2(Vector2f(150.f, 80.f));
     Text text, play, quit;
     Font font;
-    Event event2;
     Vector2 position(0.f, 0.f);
 
     window.setFramerateLimit(60); // Limit the frame rate to 60 FPS
@@ -32,6 +31,9 @@ int main()
 
     while (window.isOpen())
     {
+        RectangleShape button3(Vector2f(190.f, 120.f));
+        static int active = 0;
+
         Event event;
         while (window.pollEvent(event))
         {
@@ -86,23 +88,46 @@ int main()
         quit.setPosition(button2.getPosition().x,
                          button2.getPosition().y);
 
+        button3.setOutlineColor(Color::White);
+        button3.setOutlineThickness(5.f);
+        button3.setFillColor(Color(255, 255, 255, 0));
+        button3.setPosition(button1.getPosition().x / 1.58,
+                            button1.getPosition().y / 1.23);
+
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
             // left key is pressed: move our character
-            play.move(-1.f, 0.f);
-            play.setFillColor(Color::Yellow);
-
-            button1.setOutlineColor(Color(80, 252, 25));
-            if (Keyboard::isKeyPressed(Keyboard::Scan::Enter))
-                texture.loadFromFile("./images/peter5.png");
-            sprite.setTexture(texture);
-            sprite.setOrigin(sprite.getLocalBounds().width / 2.f, sprite.getLocalBounds().height / 2.f);
+            active = 0;
+            play.move(-3.f, 0.f);
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Right))
         {
             // right key is pressed: move our character
-            quit.move(1.f, 0.f);
+            active = 1;
+            quit.move(3.f, 0.f);
+        }
+        if (active == 0)
+        {
+            button3.setPosition(button1.getPosition().x / 1.58,
+                                button1.getPosition().y / 1.23);
+            play.setFillColor(Color::Yellow);
+            button1.setOutlineColor(Color(80, 252, 25));
+            if (Keyboard::isKeyPressed(Keyboard::Scan::Enter))
+            {
+
+                texture.loadFromFile("./images/peter5.png");
+                sprite.setTexture(texture);
+                int x = sprite.getTexture()->getSize().x;
+                position.x = (WindowWidth - x / 4);
+                position.y = WindowHeight / 5;
+                sprite.setPosition(position);
+            }
+        }
+        else
+        {
+            button3.setPosition(button2.getPosition().x / 1.225,
+                                button2.getPosition().y / 1.23);
             quit.setFillColor(Color::Yellow);
             button2.setOutlineColor(Color(255, 19, 0));
             if (Keyboard::isKeyPressed(Keyboard::Scan::Enter))
@@ -116,6 +141,7 @@ int main()
         window.draw(play);
         window.draw(button2);
         window.draw(quit);
+        window.draw(button3);
 
         window.display();
     }
