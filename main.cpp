@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <iomanip>
 #include <ctime>
+#include "Game.cpp"
 
 using namespace std;
 using namespace Json;
@@ -70,7 +71,7 @@ void readFromFile(string Cat)
     return;
 }
 
-//Read the expressions from file randomly and print in console
+// Read the expressions from file randomly and print in console
 
 void readExpressions(string expression)
 {
@@ -107,7 +108,7 @@ void play(string hiddenWord, string wordToGuess, string hint)
         cout << "|---------------------------------------------------------|" << endl;
         cout << "      To guess: " << hiddenWord << "                                 " << endl;
         cout << "|---------------------------------------------------------|" << endl;
-        cout << "      Guessed Letters are===> "<<endl;
+        cout << "      Guessed Letters are===> " << endl;
         showGuessed(guessedLetters);
         cout << endl;
         cout << "|---------------------------------------------------------|" << endl
@@ -177,7 +178,7 @@ char makeUppercase(char guess)
     return guess;
 }
 
-//Show users the already guessed letters in console so they don't repeat it
+// Show users the already guessed letters in console so they don't repeat it
 
 void showGuessed(string guessedLetters)
 {
@@ -224,6 +225,7 @@ int compareWithOriginal(string wordToGuess, char guess)
     return flag;
 }
 
+
 void CategorySelection()
 {
     int Category;
@@ -254,16 +256,7 @@ void CategorySelection()
 
 int main()
 {
-    char playAgain;
-    do
-    {
-        CategorySelection();
+   Game game;
+   game.play();
 
-        cout << "Play Again? y/n ====>";
-        cin >> playAgain;
-        if (playAgain >= 65 && playAgain <= 90)
-            playAgain += 32;
-    } while (playAgain != 'n');
-
-    return 0;
 }
