@@ -14,9 +14,13 @@ public:
     void playGame(Button &, Button &, RectangleShape &, Text &, RenderWindow &);
     void quitGame(Button &, Button &, RectangleShape &, Text &, RenderWindow &);
     void showInitialPage();
+    void secondPage();
     void setTextProperty(Text &text, string);
     void setButtonProperty(RectangleShape &box, Text &text, Button &button);
 };
+void Game::secondPage()
+{
+}
 
 void Game::setTextProperty(Text &text, string phrase)
 {
@@ -51,18 +55,13 @@ void Game::playGame(Button &play, Button &quit, RectangleShape &Active, Text &pl
 
 void Game::quitGame(Button &play, Button &quit, RectangleShape &Active, Text &quitText, RenderWindow &window)
 {
+    Event event;
     Active.setPosition(quit.boxPositionX - 20, quit.boxPositionY - 20);
     quitText.setFillColor(Color(252, 234, 21));
     quitText.setCharacterSize(quit.textCharacterSize + 10);
 
     play.Deactivate();
     quit.Activate();
-
-    if (Keyboard::isKeyPressed(Keyboard::Scan::Enter))
-    {
-        cout << "abc" << endl;
-        window.close();
-    }
 }
 
 void Game::showInitialPage()
@@ -90,6 +89,7 @@ void Game::showInitialPage()
     play.setTextColor(Color(240, 247, 180));
     play.setTextSize(30.f);
     play.setPosition(WindowWidth / 3, WindowHeight / 1.75);
+    play.isActive = true;
 
     quit.setBoxSize(150.f, 80.f);
     quit.setBoxColor(Color(213, 97, 59), Color(250, 142, 84));
@@ -97,6 +97,7 @@ void Game::showInitialPage()
     quit.setTextColor(Color(240, 247, 180));
     quit.setTextSize(30.f);
     quit.setPosition(WindowWidth / 1.8, WindowHeight / 1.75);
+    quit.isActive = false;
 
     Active.setFillColor(Color(0, 0, 0, 0));
     Active.setOutlineColor(Color(255, 255, 255));
@@ -113,33 +114,36 @@ void Game::showInitialPage()
     {
 
         Event event;
+
         while (window.pollEvent(event))
         {
             if (event.type == Event::Closed)
                 window.close();
-        }
+            if (event.type == Event::KeyPressed)
+            {
+                if (event.key.scancode == Keyboard::Scan::Left)
+                {
+                    QuitText.setCharacterSize(quit.textCharacterSize);
+                    QuitText.setFillColor(Color(quit.textFillColor));
+                    playGame(play, quit, Active, playText, window);
+                }
+                if (event.key.scancode == Keyboard::Scan::Right)
+                {
+                    playText.setCharacterSize(play.textCharacterSize);
+                    playText.setFillColor(Color(play.textFillColor));
 
-        if (event.type == Event::KeyPressed)
-        {
-            if (event.key.scancode == Keyboard::Scan::Left)
-            {
-                QuitText.setCharacterSize(quit.textCharacterSize);
-                QuitText.setFillColor(Color(quit.textFillColor));
-                playGame(play, quit, Active, playText, window);
-            }
-            if (event.key.scancode == Keyboard::Scan::Right)
-            {
-                playText.setCharacterSize(play.textCharacterSize);
-                playText.setFillColor(Color(play.textFillColor));
+                    quitGame(play, quit, Active, QuitText, window);
+                }
 
-                quitGame(play, quit, Active, QuitText, window);
-            }
-            cout<<"dhf  "<<event.key.scancode<<endl;
-            cout<<"dhrdff  "<<Keyboard::Scancode::Enter<<endl;
-            if (event.key.scancode == Keyboard::Scancode::Enter)
-            {
-                cout << "abc" << endl;
-                window.close();
+                if (event.key.scancode == Keyboard::Scancode::Enter)
+                {
+                    if (quit.isActive)
+                        window.close();
+                    if (play.isActive)
+                    {
+                        secondPage();
+                    }
+                }
             }
         }
 
