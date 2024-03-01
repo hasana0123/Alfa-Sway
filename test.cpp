@@ -230,7 +230,7 @@ void window1()
                 catsActive++;
                 if (catsActive == 4)
                     catsActive = 0;
-            cout << "bbefore: " << button4.getPosition().x << endl;
+                cout << "bbefore: " << button4.getPosition().x << endl;
                 // button4 = selectMenu(catsActive, button4);
             }
             for (int i = 0; i < 4; i++)
