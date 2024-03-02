@@ -10,6 +10,7 @@ public:
     float boxWidth, boxHeight, boxPositionX, boxPositionY, textPositionX, textPositionY, textCharacterSize;
     Color boxFillColor, boxOutlineColor, textFillColor;
     string inText;
+
     bool isActive;
 
     void setPosition(float, float);
@@ -38,7 +39,7 @@ void Button::setPosition(float x, float y)
 
     this->boxPositionX = x;
     this->boxPositionY = y;
-    this->textPositionX = x+35;
+    this->textPositionX = x + 20;
     this->textPositionY = y + 17.5;
 }
 

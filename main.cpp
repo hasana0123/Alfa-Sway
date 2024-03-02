@@ -255,7 +255,6 @@ using namespace Json;
 
 int main()
 {
-    Text a;
     Game game;
     game.showInitialPage();
 }
