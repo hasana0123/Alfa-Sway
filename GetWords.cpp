@@ -19,10 +19,10 @@ public:
     std:: string hiddenWord;
     void readFile(string Cat);
     string readComment(string);
-    bool compareGuessed(string &, string &);
+    bool compareGuessed(char &, string &);
     void replaceWord(string &);
     bool compareWord(string &);
-    void makeUppercase(string &);
+    void makeUppercase(char &);
 
     string guessedLetters();
 };
@@ -78,13 +78,13 @@ string Words::readComment(string expression)
     return comment;
 }
 
-void Words::makeUppercase(string &inputChar)
+void Words::makeUppercase(char &inputChar)
 {
-    if (inputChar[0] <= 122 && inputChar[0] >= 97)
-        inputChar[0] = inputChar[0] - 32;
+    if (inputChar <= 122 && inputChar >= 97)
+        inputChar = inputChar - 32;
 }
 
-bool Words::compareGuessed(string &inputChar, string &guessedString)
+bool Words::compareGuessed(char &inputChar, string &guessedString)
 {
 
     for (int i = 0; i < guessedString.length(); i++)

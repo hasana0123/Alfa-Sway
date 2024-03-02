@@ -3,7 +3,7 @@
         "places": [
             {
                 "phrase": "KATHMANDU",
-                "hint": "capital"
+                "hint": "capital city"
             },
             {
                 "phrase": "ANTARTICA",
@@ -15,7 +15,7 @@
             },
             {
                 "phrase": "MOUNT EVEREST",
-                "hint": "Famous mountain"
+                "hint": "Famous mountain in Nepal"
             },
             {
                 "phrase": "CHITWAN NATIONAL PARK",
@@ -29,17 +29,37 @@
         "movies": [
             {
                 "phrase": "TRAIN TO BUSAN",
-                "hint": "Zombie"
+                "hint": "Zombies, and wild deer"
+            },
+            {
+                "phrase": "THE NUN",
+                "hint": "American gothic supernatural horror film  "
+            },
+            {
+                "phrase": "IT",
+                "hint": "Horror movie with balloons"
+            },
+            {
+                "phrase": "ANIMAL",
+                "hint": "A flute playing God"
+            },
+            {
+                "phrase": "MINIONS",
+                "hint": "BAANANAAA"
             },
             {
                 "phrase": "LITTLE KRISHNA",
-                "hint": "A flute playing God"
+                "hint": "Flute, peacock feathers, blue kid"
+            },
+            {
+                "phrase": "JOKER",
+                "hint": "Clown"
             }
         ],
         "cartoons": [
             {
                 "phrase": "COURAGE THE COWARDLY DOG",
-                "hint": "Pink dog in horror house"
+                "hint": "Pink Timid dog faces fears in horror house"
             },
             {
                 "phrase": "THE POWER PUFF GIRLS",
@@ -47,21 +67,37 @@
             },
             {
                 "phrase": "JOHNNY BRAVO",
-                "hint": "A teen boy with large upper body, sunglasses, and tall"
+                "hint": "Overconfident ladies' man antics"
             },
             {
                 "phrase": "DORA THE EXPLORER",
-                "hint": "A blind short girl"
+                "hint": "A blind girl embarks on adventures."
+            },
+            {
+                "phrase": "TOM AND JERRY",
+                "hint": "Cat and the mouse saga"
             }
         ],
         "series": [
             {
                 "phrase": "TWILIGHT",
-                "hint": "Vampire"
+                "hint": "Vampire series"
             },
             {
                 "phrase": "HARRY POTTER",
-                "hint": "Leviosa"
+                "hint": "Spells, Magic and wizards"
+            },
+            {
+                "phrase": "BOYS OVER FLOWER",
+                "hint": "F4: Korean highschool drama"
+            },
+            {
+                "phrase": "ATTACK ON TITAN",
+                "hint": "Anime series with giant humanoid creatures"
+            },
+            {
+                "phrase": "GAME OF THRONES",
+                "hint": "Political intrigue, epic battles."
             }
         ]
     },
@@ -72,6 +108,7 @@
             "That makes me like you a little!",
             "Thank god,finally!",
             "Yeah, That's what I'm talking about Now!",
+            "Try not to kill me, will ya?",
             "Keep Going!!!"
         ],
         "incorrect":[
