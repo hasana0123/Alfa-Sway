@@ -17,19 +17,19 @@ public:
     void showInitialPage();
     void secondPage(RenderWindow &window, Sprite &);
     void thirdPage(RenderWindow &window, Sprite &, int &);
-    void fourthPage(RenderWindow &window);
-    void setTextProperty(Text &text, string, float, float);
+    void fourthPage(RenderWindow &window, string, string, Sprite &);
+    void setTextProperty(Text &text, string, float, float, float);
     void setButtonProperty(RectangleShape &box, Text &text, Button &button);
     void selectMenu(int &, RectangleShape &, Button button[], Text text[]);
 };
 
-void Game::setTextProperty(Text &text, string phrase, float widthRatio, float heightRatio)
+void Game::setTextProperty(Text &text, string phrase, float widthRatio, float heightRatio, float charSize)
 {
 
     text.setString(phrase);
     text.setPosition(WindowWidth / widthRatio, WindowHeight / heightRatio);
     text.setFillColor(Color::White);
-    text.setCharacterSize(50.f);
+    text.setCharacterSize(charSize);
 }
 
 void Game::setButtonProperty(RectangleShape &box, Text &text, Button &button)
@@ -45,8 +45,59 @@ void Game::setButtonProperty(RectangleShape &box, Text &text, Button &button)
     text.setString(button.inText);
 }
 
-void Game::fourthPage(RenderWindow &window)
+void Game::fourthPage(RenderWindow &window, string phrase, string message, Sprite &sprite)
 {
+    Font font;
+    if (!font.loadFromFile("./Fonts/Roboto-Black.ttf"))
+        return;
+
+    Button play, quit;
+    RectangleShape Play(Vector2f(150.f, 80.f)), Quit(Vector2f(150.f, 80.f)), Active(Vector2f(190.f, 120.f));
+    Text playText, QuitText;
+    Text messageText, phraseText;
+
+    playText.setFont(font);
+    QuitText.setFont(font);
+
+    messageText.setFont(font);
+    phraseText.setFont(font);
+
+    setTextProperty(messageText, message, 3, 4, 60.f);
+    setTextProperty(phraseText, "The phrase was " + phrase, 3.78, 2, 40.f);
+
+    messageText.Bold;
+    phraseText.setFillColor(Color(247, 70, 36));
+    phraseText.Bold;
+
+    play.setBoxSize(150.f, 80.f);
+    play.setBoxColor(Color(87, 146, 21), Color(115, 222, 90));
+    play.setText("Again?");
+    play.setTextColor(Color(240, 247, 180));
+    play.setTextSize(30.f);
+    play.setPosition(WindowWidth / 3, WindowHeight / 1.5);
+    play.isActive = true;
+
+    quit.setBoxSize(150.f, 80.f);
+    quit.setBoxColor(Color(213, 97, 59), Color(250, 142, 84));
+    quit.setText("QUIT");
+    quit.setTextColor(Color(240, 247, 180));
+    quit.setTextSize(30.f);
+    quit.setPosition(WindowWidth / 1.8, WindowHeight / 1.5);
+    quit.isActive = false;
+
+    Active.setFillColor(Color(0, 0, 0, 0));
+    Active.setOutlineColor(Color::Yellow);
+    Active.setOutlineThickness(10.f);
+    Active.setPosition(play.boxPositionX - 20, play.boxPositionY - 20);
+
+    sprite.setColor(Color(177, 0, 255));
+
+    setButtonProperty(Play, playText, play);
+    setButtonProperty(Quit, QuitText, quit);
+
+    playText.setFillColor(Color(252, 234, 21));
+    playText.setCharacterSize(play.textCharacterSize + 10);
+
     while (window.isOpen())
     {
         Event event;
@@ -54,8 +105,44 @@ void Game::fourthPage(RenderWindow &window)
         {
             if (event.type == Event::Closed)
                 window.close();
+            if (event.type == Event::KeyPressed)
+            {
+                if (event.key.scancode == Keyboard::Scan::Left)
+                {
+                    QuitText.setCharacterSize(quit.textCharacterSize);
+                    QuitText.setFillColor(Color(quit.textFillColor));
+                    playGame(play, quit, Active, playText);
+                }
+                if (event.key.scancode == Keyboard::Scan::Right)
+                {
+                    playText.setCharacterSize(play.textCharacterSize);
+                    playText.setFillColor(Color(play.textFillColor));
+
+                    quitGame(play, quit, Active, QuitText);
+                }
+
+                if (event.key.scancode == Keyboard::Scancode::Enter)
+                {
+                    if (quit.isActive)
+                        window.close();
+
+                    if (play.isActive)
+                    {
+                        secondPage(window, sprite);
+                    }
+                }
+            }
         }
+
         window.clear();
+        window.draw(sprite);
+        window.draw(Quit);
+        window.draw(QuitText);
+        window.draw(Play);
+        window.draw(playText);
+        window.draw(messageText);
+        window.draw(phraseText);
+        window.draw(Active);
         window.display();
     }
 }
@@ -67,7 +154,7 @@ void Game::thirdPage(RenderWindow &window, Sprite &background, int &activeKey)
     if (!font.loadFromFile("./Fonts/Roboto-Black.ttf"))
         return;
 
-    Text hint, commentText, phrase, inputText, guessedText,chancesText;
+    Text hint, commentText, phrase, inputText, guessedText, chancesText;
     string guessedString, comment;
     char inputChar;
     string inputChar1 = " ";
@@ -107,84 +194,75 @@ void Game::thirdPage(RenderWindow &window, Sprite &background, int &activeKey)
         break;
     }
     string Hint = "HINT : " + word.hint;
-    setTextProperty(hint, Hint, 4, 4);
+    setTextProperty(hint, Hint, 6, 6, 40.f);
     while (window.isOpen())
-        // do
-        // {
+    
+    {
+        Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == Event::Closed)
+                window.close();
+            if (event.type == sf::Event::TextEntered)
             {
-                Event event;
-                while (window.pollEvent(event))
+                if (event.text.unicode < 128)
                 {
-                    if (event.type == Event::Closed)
-                        window.close();
-
-                    if (event.type == sf::Event::TextEntered)
+                    // Check if the entered character is a letter
+                    if (isalpha(event.text.unicode))
                     {
-                        if (event.text.unicode < 128)
-                        {
-                            // Check if the entered character is a letter
-                            if (isalpha(event.text.unicode))
-                            {
-                                // Print the entered letter
-                                inputChar = static_cast<char>(event.text.unicode);
-                                cout << inputChar << endl;
-                                {
-                                    inputChar1.pop_back();
-                                    inputChar1.push_back(inputChar);
-                                }
-                                word.makeUppercase(inputChar1);
-                                if (word.compareGuessed(inputChar1, guessedString))
-                                    continue;
-                                else
-                                {
+                        inputChar = static_cast<char>(event.text.unicode);
+                        word.makeUppercase(inputChar);
 
-                                    guessedString.push_back(inputChar1[0]);
-                                    guessedString.push_back(',');
-                                }
-                                cout << guessedString << endl;
-                                cout << "char1: " << inputChar1[0] << endl;
-                            }
+                        if (word.compareGuessed(inputChar, guessedString))
+                            continue;
+                        else
+                        {
+                            inputChar1.pop_back();
+                            inputChar1.push_back(inputChar);
+
+                            guessedString.push_back(inputChar1[0]);
+                            guessedString.push_back(',');
                         }
                     }
+                    input.setText(("Enter: " + inputChar1));
+                    setButtonProperty(inputBox, inputText, input);
+                    setTextProperty(guessedText, "Invalid: " + guessedString, 10, 0.9, 30.f);
+                    if (word.compareWord(inputChar1))
+                    {
+                        comment = word.readComment("correct");
+                        word.replaceWord(inputChar1);
+                        if (word.hiddenWord == word.phrase)
+                            fourthPage(window, word.phrase, "Yay! YOU WON ", background);
+                    }
+                    else
+                    {
+                        chances--
+                        ;
+                        comment = word.readComment("incorrect");
+                        if (chances == 0)
+                            fourthPage(window, word.phrase, "I WILL NEVER FORGET YOU!", background);
+                    }
+                    stringstream cha;
+                    cha << chances;
+                    setTextProperty(chancesText, "Lives: " + cha.str(), 7, 3, 30.f);
+                    setTextProperty(commentText, comment, 2, 9, 25.f);
+                    setTextProperty(phrase, word.hiddenWord, 4, 2, 60.f);
                 }
-                input.setText(("Enter: " + inputChar1));
-                setButtonProperty(inputBox, inputText, input);
-                setTextProperty(guessedText, guessedString, 10, 1.2);
-                if (word.compareWord(inputChar1))
-                {
-                    comment = word.readComment("correct");
-                    word.replaceWord(inputChar1);
-                    if (word.hiddenWord == word.phrase)
-                        fourthPage(window);
-                }
-                else
-                {
-                    chances--;
-                    comment = word.readComment("incorrect");
-                    if(chances == 0)
-                    fourthPage(window);
-                    
-                }
-                stringstream cha;
-                cha<<chances;
-                setTextProperty(chancesText,cha.str(),3,3);
-                setTextProperty(commentText, comment, 2, 5);
-                setTextProperty(phrase, word.hiddenWord, 4, 2);
-
-                window.clear();
-                window.draw(background);
-                window.draw(hint);
-                window.draw(phrase);
-                window.draw(inputBox);
-                window.draw(inputText);
-                window.draw(chancesText);
-                window.draw(commentText);
-                window.draw(guessedText);
-
-                window.display();
             }
-        // } while (chances != 0);
-        fourthPage(window);
+        }
+
+        window.clear();
+        window.draw(background);
+        window.draw(hint);
+        window.draw(phrase);
+        window.draw(inputBox);
+        window.draw(inputText);
+        window.draw(chancesText);
+        window.draw(commentText);
+        window.draw(guessedText);
+
+        window.display();
+    }
 }
 
 void Game::selectMenu(int &activeKey, RectangleShape &Active, Button button[4], Text text[4])
@@ -254,7 +332,7 @@ void Game::secondPage(RenderWindow &window, Sprite &sprite)
 
     chooseText.setFont(font);
 
-    setTextProperty(chooseText, "Choose a Category:", 3.f, 4);
+    setTextProperty(chooseText, "Choose a Category:", 3.f, 4, 50.f);
 
     Active.setFillColor(Color(0, 0, 0, 0));
     Active.setOutlineColor(Color(187, 183, 132));
@@ -378,7 +456,7 @@ void Game::showInitialPage()
 
     sprite.setColor(Color(177, 0, 255));
 
-    setTextProperty(letsPlay, "LET'S PLAY!", 2.5, 4);
+    setTextProperty(letsPlay, "LET'S PLAY!", 2.5, 4, 50.f);
     setButtonProperty(Play, playText, play);
     setButtonProperty(Quit, QuitText, quit);
 
