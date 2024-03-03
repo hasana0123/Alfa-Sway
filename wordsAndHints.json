@@ -40,8 +40,8 @@
                 "hint": "Horror movie with balloons"
             },
             {
-                "phrase": "ANIMAL",
-                "hint": "A flute playing God"
+                "phrase": "INTERSTELLAR",
+                "hint": "Sci-Fi movie about space and time travel"
             },
             {
                 "phrase": "MINIONS",
@@ -59,11 +59,11 @@
         "cartoons": [
             {
                 "phrase": "COURAGE THE COWARDLY DOG",
-                "hint": "Pink Timid dog faces fears in horror house"
+                "hint": "Pink dog fears in horror house"
             },
             {
                 "phrase": "THE POWER PUFF GIRLS",
-                "hint": "Three colorful little girls who can fly"
+                "hint": "Three colorful little flying girls"
             },
             {
                 "phrase": "JOHNNY BRAVO",
@@ -93,7 +93,7 @@
             },
             {
                 "phrase": "ATTACK ON TITAN",
-                "hint": "Anime series with giant humanoid creatures"
+                "hint": "Anime about human eating giants"
             },
             {
                 "phrase": "GAME OF THRONES",
