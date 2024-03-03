@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Button.cpp"
 #include "GetWords.cpp"
+#include "Images.cpp"
 
 using namespace std;
 using namespace sf;
@@ -147,15 +148,31 @@ void Game::fourthPage(RenderWindow &window, string phrase, string message, Sprit
     }
 }
 
+void delaySeconds(float seconds)
+{
+    sf::Clock clock;
+    sf::Time delay = sf::seconds(seconds);
+
+    while (clock.getElapsedTime() < delay)
+    {
+        // Do nothing, just wait
+    }
+}
+
 void Game::thirdPage(RenderWindow &window, Sprite &background, int &activeKey)
 {
+    Images image;
+    int winFlag = 0;
+
+    Clock clock;
+    Time delay = seconds(10.f);
 
     Font font;
     if (!font.loadFromFile("./Fonts/Roboto-Black.ttf"))
         return;
 
     Text hint, commentText, phrase, inputText, guessedText, chancesText;
-    string guessedString, comment;
+    string guessedString, comment, message;
     char inputChar;
     string inputChar1 = " ";
     RectangleShape inputBox(Vector2f(150.f, 90.f));
@@ -175,6 +192,11 @@ void Game::thirdPage(RenderWindow &window, Sprite &background, int &activeKey)
     input.setTextColor(Color(240, 247, 180));
     input.setTextSize(30.f);
     input.setPosition(WindowWidth / 3, WindowHeight / 1.2);
+
+    image.sprite.setOrigin(image.sprite.getLocalBounds().width / 2.f, image.sprite.getLocalBounds().height / 2.f);
+    image.sprite.setScale(0.65f, 0.65f);
+
+    image.sprite.setPosition(WindowWidth / 1.3, WindowHeight / 200);
 
     switch (activeKey)
     {
@@ -196,8 +218,9 @@ void Game::thirdPage(RenderWindow &window, Sprite &background, int &activeKey)
     string Hint = "HINT : " + word.hint;
     setTextProperty(hint, Hint, 6, 6, 40.f);
     while (window.isOpen())
-    
+
     {
+        image.returnImage(chances, winFlag);
         Event event;
         while (window.pollEvent(event))
         {
@@ -223,35 +246,44 @@ void Game::thirdPage(RenderWindow &window, Sprite &background, int &activeKey)
                             guessedString.push_back(inputChar1[0]);
                             guessedString.push_back(',');
                         }
+                        if (word.compareWord(inputChar1))
+                        {
+                            comment = word.readComment("correct");
+                            word.replaceWord(inputChar1);
+                            if (word.hiddenWord == word.phrase)
+                            {
+                                winFlag = 1;
+                                image.returnImage(chances, winFlag);
+                                message = "Yay! YOU WON";
+                            }
+                        }
+                        else
+                        {
+                            chances--;
+                            comment = word.readComment("incorrect");
+                        }
                     }
                     input.setText(("Enter: " + inputChar1));
                     setButtonProperty(inputBox, inputText, input);
                     setTextProperty(guessedText, "Invalid: " + guessedString, 10, 0.9, 30.f);
-                    if (word.compareWord(inputChar1))
-                    {
-                        comment = word.readComment("correct");
-                        word.replaceWord(inputChar1);
-                        if (word.hiddenWord == word.phrase)
-                            fourthPage(window, word.phrase, "Yay! YOU WON ", background);
-                    }
-                    else
-                    {
-                        chances--
-                        ;
-                        comment = word.readComment("incorrect");
-                        if (chances == 0)
-                            fourthPage(window, word.phrase, "I WILL NEVER FORGET YOU!", background);
-                    }
                     stringstream cha;
                     cha << chances;
                     setTextProperty(chancesText, "Lives: " + cha.str(), 7, 3, 30.f);
-                    setTextProperty(commentText, comment, 2, 9, 25.f);
+                    setTextProperty(commentText, comment, 2, 3, 25.f);
                     setTextProperty(phrase, word.hiddenWord, 4, 2, 60.f);
                 }
             }
         }
 
         window.clear();
+        if (chances == 0)
+        {
+            delaySeconds(1.f);
+            Time elapsed = clock.restart();
+            float distance = 25 * elapsed.asSeconds();
+            image.sprite.move(0, distance);
+            message = "I WILL NEVER FORGET YOU!";
+        }
         window.draw(background);
         window.draw(hint);
         window.draw(phrase);
@@ -260,8 +292,14 @@ void Game::thirdPage(RenderWindow &window, Sprite &background, int &activeKey)
         window.draw(chancesText);
         window.draw(commentText);
         window.draw(guessedText);
+        window.draw(image.sprite);
 
         window.display();
+        if (winFlag == 1 || chances == 0)
+        {
+            delaySeconds(1.f);
+            fourthPage(window, word.phrase, message, background);
+        }
     }
 }
 
@@ -335,7 +373,7 @@ void Game::secondPage(RenderWindow &window, Sprite &sprite)
     setTextProperty(chooseText, "Choose a Category:", 3.f, 4, 50.f);
 
     Active.setFillColor(Color(0, 0, 0, 0));
-    Active.setOutlineColor(Color(187, 183, 132));
+    Active.setOutlineColor(Color(187, 183, 132, 10));
     Active.setOutlineThickness(10.f);
     Active.setPosition(choiceButtons[0].boxPositionX - 15, choiceButtons[0].boxPositionY - 20);
 
