@@ -7,13 +7,13 @@ using namespace sf;
 class Images
 {
 public:
-    Texture texture, texture1, texture2, texture3, texture4, texture5, texture6,texture7;
+    Texture texture, texture1, texture2, texture3, texture4, texture5, texture6, texture7, texture8;
     Sprite sprite;
 
-    void returnImage(int &, int);
+    void returnImage(int &, int, int);
 };
 
-void Images::returnImage(int &life, int winflag)
+void Images::returnImage(int &life, int winflag, int correct)
 {
 
     if (!this->texture1.loadFromFile("./images/peter1.png"))
@@ -30,38 +30,43 @@ void Images::returnImage(int &life, int winflag)
         return;
     if (!this->texture7.loadFromFile("./images/peter7.png"))
         return;
-
-    if (winflag == 0)
+    if (!this->texture8.loadFromFile("./images/peter8.png"))
+        return;
+    if (correct == 0)
     {
-        switch (life)
+        if (winflag == 0)
         {
-        case 0:
-            texture = texture6;
-            break;
-        case 1:
-            texture = texture5;
+            switch (life)
+            {
+            case 1:
+                texture = texture5;
 
-            break;
-        case 2:
-            texture = texture4;
+                break;
+            case 2:
+                texture = texture4;
 
-            break;
-        case 3:
-            texture = texture3;
+                break;
+            case 3:
+                texture = texture3;
 
-            break;
-        case 4:
-            texture = texture7;
+                break;
+            case 4:
+                texture = texture7;
 
-            break;
-        case 5:
-            texture = texture1;
-            break;
-        default:
-            break;
+                break;
+            case 5:
+                texture = texture1;
+                break;
+            default:
+                break;
+            }
         }
     }
     else
         texture = texture2;
+    if (winflag == 1)
+        texture = texture8;
+    if (winflag == 0 && life == 0)
+        texture = texture6;
     this->sprite.setTexture(texture);
 }
