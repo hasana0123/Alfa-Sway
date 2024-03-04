@@ -1,5 +1,4 @@
 #include <iostream>
-#include <typeinfo>
 #include <SFML/Graphics.hpp>
 #include "Button.cpp"
 #include "GetWords.cpp"
@@ -18,18 +17,18 @@ public:
     void showInitialPage();
     void secondPage(RenderWindow &window, Sprite &);
     void thirdPage(RenderWindow &window, Sprite &, int &);
-    void fourthPage(RenderWindow &window, string, string, Sprite &);
-    void setTextProperty(Text &text, string, float, float, float);
+    void fourthPage(RenderWindow &window, string, string, Sprite &, int flag, Sprite &);
+    void setTextProperty(Text &text, string, float, float, float, Color);
     void setButtonProperty(RectangleShape &box, Text &text, Button &button);
     void selectMenu(int &, RectangleShape &, Button button[], Text text[]);
 };
 
-void Game::setTextProperty(Text &text, string phrase, float widthRatio, float heightRatio, float charSize)
+void Game::setTextProperty(Text &text, string phrase, float widthRatio, float heightRatio, float charSize, Color color)
 {
 
     text.setString(phrase);
     text.setPosition(WindowWidth / widthRatio, WindowHeight / heightRatio);
-    text.setFillColor(Color::White);
+    text.setFillColor(color);
     text.setCharacterSize(charSize);
 }
 
@@ -46,28 +45,48 @@ void Game::setButtonProperty(RectangleShape &box, Text &text, Button &button)
     text.setString(button.inText);
 }
 
-void Game::fourthPage(RenderWindow &window, string phrase, string message, Sprite &sprite)
+void Game::fourthPage(RenderWindow &window, string phrase, string message, Sprite &background, int flag, Sprite &sprite)
 {
     Font font;
     if (!font.loadFromFile("./Fonts/Roboto-Black.ttf"))
         return;
 
     Button play, quit;
+    Color color, color1;
     RectangleShape Play(Vector2f(150.f, 80.f)), Quit(Vector2f(150.f, 80.f)), Active(Vector2f(190.f, 120.f));
     Text playText, QuitText;
     Text messageText, phraseText;
+    float width, height;
 
+    color1 = Color::White;
     playText.setFont(font);
     QuitText.setFont(font);
 
     messageText.setFont(font);
     phraseText.setFont(font);
 
-    setTextProperty(messageText, message, 3, 4, 60.f);
-    setTextProperty(phraseText, "The phrase was " + phrase, 3.78, 2, 40.f);
+    switch (flag)
+    {
+    case 1:
+        setTextProperty(messageText, message, 3, 6, 60.f, color1);
+        color = Color(78, 231, 44);
+        width = WindowWidth / 2.5;
+        height = (WindowHeight / 4);
+        break;
+    case 0:
+        setTextProperty(messageText, message, 4, 6, 60.f, color1);
+        color = Color(231, 100, 44);
+        width = WindowWidth / 2.5;
+        height = (WindowHeight / 3.5);
+        break;
+    default:
+        break;
+    }
+    sprite.setPosition(width, height);
+
+    setTextProperty(phraseText, "The phrase was " + phrase, 3.78, 2, 40.f, color);
 
     messageText.Bold;
-    phraseText.setFillColor(Color(247, 70, 36));
     phraseText.Bold;
 
     play.setBoxSize(150.f, 80.f);
@@ -90,8 +109,6 @@ void Game::fourthPage(RenderWindow &window, string phrase, string message, Sprit
     Active.setOutlineColor(Color::Yellow);
     Active.setOutlineThickness(10.f);
     Active.setPosition(play.boxPositionX - 20, play.boxPositionY - 20);
-
-    sprite.setColor(Color(177, 0, 255));
 
     setButtonProperty(Play, playText, play);
     setButtonProperty(Quit, QuitText, quit);
@@ -129,13 +146,14 @@ void Game::fourthPage(RenderWindow &window, string phrase, string message, Sprit
 
                     if (play.isActive)
                     {
-                        secondPage(window, sprite);
+                        secondPage(window, background);
                     }
                 }
             }
         }
 
         window.clear();
+        window.draw(background);
         window.draw(sprite);
         window.draw(Quit);
         window.draw(QuitText);
@@ -162,10 +180,8 @@ void delaySeconds(float seconds)
 void Game::thirdPage(RenderWindow &window, Sprite &background, int &activeKey)
 {
     Images image;
-    int winFlag = 0;
 
     Clock clock;
-    Time delay = seconds(10.f);
 
     Font font;
     if (!font.loadFromFile("./Fonts/Roboto-Black.ttf"))
@@ -174,11 +190,14 @@ void Game::thirdPage(RenderWindow &window, Sprite &background, int &activeKey)
     Text hint, commentText, phrase, inputText, guessedText, chancesText;
     string guessedString, comment, message;
     char inputChar;
-    string inputChar1 = " ";
-    RectangleShape inputBox(Vector2f(150.f, 90.f));
-    Words word;
-    int chances = 5;
+    RectangleShape inputBox(Vector2f(150.f, 90.f)), Flash(Vector2f(WindowWidth, WindowHeight));
     Button input;
+    Words word;
+    Color color1 = Color::White, commentColor;
+
+    int winFlag = 0, correctFlag = 0;
+    string inputChar1 = " ";
+    int chances = 5;
 
     hint.setFont(font);
     phrase.setFont(font);
@@ -194,38 +213,46 @@ void Game::thirdPage(RenderWindow &window, Sprite &background, int &activeKey)
     input.setPosition(WindowWidth / 3, WindowHeight / 1.2);
 
     image.sprite.setOrigin(image.sprite.getLocalBounds().width / 2.f, image.sprite.getLocalBounds().height / 2.f);
-    image.sprite.setScale(0.65f, 0.65f);
+    image.sprite.setScale(0.8f, 0.8f);
 
-    image.sprite.setPosition(WindowWidth / 1.3, WindowHeight / 200);
+    image.sprite.setPosition(WindowWidth / 1.4, WindowHeight / 200);
+    Flash.setFillColor(Color(0, 0, 0, 0));
+    Flash.setScale(10, 10);
 
     switch (activeKey)
     {
     case 0:
         word.readFile("places");
         break;
+
     case 1:
         word.readFile("series");
         break;
+
     case 2:
         word.readFile("cartoons");
         break;
+
     case 3:
         word.readFile("movies");
         break;
+
     default:
         break;
     }
-    string Hint = "HINT : " + word.hint;
-    setTextProperty(hint, Hint, 6, 6, 40.f);
-    while (window.isOpen())
 
+    string Hint = "HINT : " + word.hint;
+    setTextProperty(hint, Hint, 6, 6, 40.f, color1);
+
+    while (window.isOpen())
     {
-        image.returnImage(chances, winFlag);
+        image.returnImage(chances, winFlag, correctFlag);
         Event event;
         while (window.pollEvent(event))
         {
             if (event.type == Event::Closed)
                 window.close();
+
             if (event.type == sf::Event::TextEntered)
             {
                 if (event.text.unicode < 128)
@@ -238,6 +265,7 @@ void Game::thirdPage(RenderWindow &window, Sprite &background, int &activeKey)
 
                         if (word.compareGuessed(inputChar, guessedString))
                             continue;
+
                         else
                         {
                             inputChar1.pop_back();
@@ -246,36 +274,46 @@ void Game::thirdPage(RenderWindow &window, Sprite &background, int &activeKey)
                             guessedString.push_back(inputChar1[0]);
                             guessedString.push_back(',');
                         }
+
                         if (word.compareWord(inputChar1))
                         {
                             comment = word.readComment("correct");
                             word.replaceWord(inputChar1);
-                            if (word.hiddenWord == word.phrase)
-                            {
-                                winFlag = 1;
-                                image.returnImage(chances, winFlag);
-                                message = "Yay! YOU WON";
-                            }
+                            Flash.setFillColor(Color(58, 196, 36, 200));
+                            window.draw(Flash);
+                            window.display();
+                            delaySeconds(0.2f);
+                            commentColor = Color::Green;
+                            correctFlag = 1;
                         }
+
                         else
                         {
                             chances--;
                             comment = word.readComment("incorrect");
+                            Flash.setFillColor(Color(196, 36, 36, 150));
+                            window.draw(Flash);
+                            window.display();
+                            delaySeconds(0.2f);
+                            commentColor = Color(222, 89, 22);
+                            correctFlag = 0;
                         }
                     }
+
                     input.setText(("Enter: " + inputChar1));
                     setButtonProperty(inputBox, inputText, input);
-                    setTextProperty(guessedText, "Invalid: " + guessedString, 10, 0.9, 30.f);
+                    setTextProperty(guessedText, "Invalid: " + guessedString, 10, 0.9, 30.f, Color::Yellow);
                     stringstream cha;
                     cha << chances;
-                    setTextProperty(chancesText, "Lives: " + cha.str(), 7, 3, 30.f);
-                    setTextProperty(commentText, comment, 2, 3, 25.f);
-                    setTextProperty(phrase, word.hiddenWord, 4, 2, 60.f);
+                    setTextProperty(chancesText, "Lives: " + cha.str(), 7, 3, 30.f, color1);
+                    setTextProperty(commentText, comment, 2, 3, 25.f, commentColor);
+                    setTextProperty(phrase, word.hiddenWord, 4, 2, 60.f, color1);
                 }
             }
         }
 
         window.clear();
+
         if (chances == 0)
         {
             delaySeconds(1.f);
@@ -284,6 +322,7 @@ void Game::thirdPage(RenderWindow &window, Sprite &background, int &activeKey)
             image.sprite.move(0, distance);
             message = "I WILL NEVER FORGET YOU!";
         }
+
         window.draw(background);
         window.draw(hint);
         window.draw(phrase);
@@ -293,12 +332,25 @@ void Game::thirdPage(RenderWindow &window, Sprite &background, int &activeKey)
         window.draw(commentText);
         window.draw(guessedText);
         window.draw(image.sprite);
-
         window.display();
+
+        if (word.hiddenWord == word.phrase)
+        {
+            winFlag = 1;
+            image.returnImage(chances, winFlag, correctFlag);
+            message = "Yay! YOU WON";
+            Flash.setFillColor(Color(123, 196, 36, 150));
+            window.draw(Flash);
+            window.display();
+            delaySeconds(0.1f);
+        }
+
+        image.returnImage(chances, winFlag, correctFlag);
+
         if (winFlag == 1 || chances == 0)
         {
             delaySeconds(1.f);
-            fourthPage(window, word.phrase, message, background);
+            fourthPage(window, word.phrase, message, background, winFlag, image.sprite);
         }
     }
 }
@@ -311,6 +363,7 @@ void Game::selectMenu(int &activeKey, RectangleShape &Active, Button button[4], 
 
     text[activeKey].setFillColor(Color(252, 234, 21));
     text[activeKey].setCharacterSize(button[activeKey].textCharacterSize + 3);
+
     for (int i = 0; i < 4; i++)
     {
         if (activeKey == i)
@@ -370,7 +423,7 @@ void Game::secondPage(RenderWindow &window, Sprite &sprite)
 
     chooseText.setFont(font);
 
-    setTextProperty(chooseText, "Choose a Category:", 3.f, 4, 50.f);
+    setTextProperty(chooseText, "Choose a Category:", 3.f, 4, 50.f, Color::White);
 
     Active.setFillColor(Color(0, 0, 0, 0));
     Active.setOutlineColor(Color(187, 183, 132, 10));
@@ -421,11 +474,13 @@ void Game::secondPage(RenderWindow &window, Sprite &sprite)
         }
         window.clear();
         window.draw(sprite);
+
         for (int i = 0; i < 4; i++)
         {
             window.draw(choiceShape[i]);
             window.draw(choiceText[i]);
         }
+
         window.draw(Active);
         window.draw(chooseText);
         window.display();
@@ -443,11 +498,9 @@ void Game::playGame(Button &play, Button &quit, RectangleShape &Active, Text &pl
 
 void Game::quitGame(Button &play, Button &quit, RectangleShape &Active, Text &quitText)
 {
-    Event event;
     Active.setPosition(quit.boxPositionX - 20, quit.boxPositionY - 20);
     quitText.setFillColor(Color(252, 234, 21));
     quitText.setCharacterSize(quit.textCharacterSize + 10);
-
     play.Deactivate();
     quit.Activate();
 }
@@ -462,12 +515,13 @@ void Game::showInitialPage()
     Font font;
     if (!font.loadFromFile("./Fonts/Roboto-Black.ttf"))
         return;
+
     playText.setFont(font);
     QuitText.setFont(font);
     letsPlay.setFont(font);
 
     Texture texture;
-    if (!texture.loadFromFile("./images/bg1.jpg"))
+    if (!texture.loadFromFile("./images/bg1.png"))
         return;
     Sprite sprite(texture);
 
@@ -494,7 +548,7 @@ void Game::showInitialPage()
 
     sprite.setColor(Color(177, 0, 255));
 
-    setTextProperty(letsPlay, "LET'S PLAY!", 2.5, 4, 50.f);
+    setTextProperty(letsPlay, "LET'S PLAY!", 2.5, 4, 50.f, Color::White);
     setButtonProperty(Play, playText, play);
     setButtonProperty(Quit, QuitText, quit);
 
@@ -510,6 +564,7 @@ void Game::showInitialPage()
         {
             if (event.type == Event::Closed)
                 window.close();
+                
             if (event.type == Event::KeyPressed)
             {
                 if (event.key.scancode == Keyboard::Scan::Left)
@@ -518,6 +573,7 @@ void Game::showInitialPage()
                     QuitText.setFillColor(Color(quit.textFillColor));
                     playGame(play, quit, Active, playText);
                 }
+
                 if (event.key.scancode == Keyboard::Scan::Right)
                 {
                     playText.setCharacterSize(play.textCharacterSize);

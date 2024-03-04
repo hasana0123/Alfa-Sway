@@ -1,10 +1,8 @@
 #include <iostream>
 #include <string>
 #include <json/json.h>
-#include <typeinfo>
 #include <fstream>
 #include <cstdlib>
-#include <iomanip>
 #include <ctime>
 #include <SFML/Graphics.hpp>
 
